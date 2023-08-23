@@ -2,6 +2,18 @@ import React,{useState} from 'react'
 import Formfeild from './Formfield'
 import Loader from './Loader'
 import { preview } from '../assets'
+import {generateImage} from "../utils"
+// import OpenAI from "openai";
+
+// const configuration = new Configuration({
+//   apiKey:process.env.REACT_OPENAI_API_KEY,
+// })
+
+// const openai = new OpenAI({
+//   apiKey: "",
+// });
+
+// const openai = new OpenAIApi(configuration);
 
 
 const ImageGeneration = () => {
@@ -10,8 +22,28 @@ const ImageGeneration = () => {
         prompt:"Enter text prompt",
         photo:""
     })
-
+    const[imageUrl,setImageUrl] = useState("")
     const [isGenerating,setIsGenerating] = useState(false);
+
+    const generateAiImage=async()=>{
+      try{
+      if(form.prompt){
+      setIsGenerating(true);
+      const url= await generateImage(form.prompt)
+      setForm({...form,photo:url})
+      setIsGenerating(false)}else{
+        alert("Please enter a valid prompt")
+      }
+    
+    }catch(error){
+        alert(error);
+      }
+
+    }
+
+
+
+
 
   return (
     <div className='max-w-[100%] h-[64%] mx-auto mt-5 flex flex-row bg-black opacity-75 p-4'>
@@ -23,7 +55,10 @@ const ImageGeneration = () => {
             name="name"
             placeholder="Sneha"
             value={form.name}
-            handelChange={()=>{}}
+            handelChange={(e)=>setForm({
+              ...form,
+              [e.target.name]:e.target.value,
+            })}
           />
 
           <Formfeild
@@ -32,7 +67,9 @@ const ImageGeneration = () => {
             name="prompt"
             placeholder="A Man falling in Love with his Computer, digital art"
             value={form.prompt}
-           
+            handelChange={(e)=>setForm({
+              ...form,
+              [e.target.name]:e.target.value,})}
           />           
 
         </div>
@@ -55,7 +92,7 @@ const ImageGeneration = () => {
          <div className='mt-2 px-auto bg-black w-full py-3 flex justify-center items-center'>
           <button
             type="button"
-            onClick={()=>{}}
+            onClick={generateAiImage}
             className="text-white bg-[#219665cd] hover:bg-[#30b043] font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center"
           >
             {isGenerating ? "Generating..." : "Generate"}
