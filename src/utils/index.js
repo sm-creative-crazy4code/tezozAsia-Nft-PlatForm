@@ -1,5 +1,7 @@
 const {Configuration,OpenAIApi} = require('openai')
-// const { NFTStorage, File } = require('nft.storage')
+const axios= require('axios')
+// const  { Web3Storage } = require('web3.storage')
+
 
 const config = new Configuration({
     apiKey: process.env.REACT_APP_OPENAI_API_KEY,
@@ -7,7 +9,7 @@ const config = new Configuration({
 
 const openai = new OpenAIApi(config)
 
-// const client = new NFTStorage({ token: process.env.REACT_APP_NFT_STORAGE })
+
 
 
 export const generateImage= async (prompt)=>{
@@ -37,19 +39,37 @@ export const getBase64Response= async(prompt)=>{
 
 }
 
+// const {data} = await axios.post('https://httpbin.org/post', {
+//     firstName: 'Fred',
+//     lastName: 'Flintstone',
+//     orders: [1, 2, 3],
+//     photo: document.querySelector('#fileInput').files
+//   }, {
+//     headers: {
+//       'Content-Type': 'multipart/form-data'
+//     }
+//   }
+// )
 
-// export const UploadImageToIpfs=async(imagedata,form)=>{
-//     const imageFile = new File([ imagedata ], 'nft.png', { type: 'image/png' })
-//     const nftdata = await client.store({
-//         name: form.name,
-//         description: form.prompt,
-//         image: imageFile
-//       })
-
-//     const ipfsHs= await client.store(nftdata)
-
-//     return ipfsHs
 
 
-// }
+
+
+export const uploadFileToIpfs=async(imghash,name,prompt)=>{
+    const ipfsHash = await axios.post("https://api.pinata.cloud/pinning/pinJsonToIPFS",
+      {
+        name: name,
+        description: prompt,
+        image: imghash,
+      
+      headers:{
+        'pinata_api_key': `${process.env.REACT_APP_PINATA_API_KEY}`,
+        'pinata_secret_api_key': `${process.env.REACT_APP_PINATA_SECRET_KEY}`
+      }
+    });
+return ipfsHash
+
+
+}
+
 

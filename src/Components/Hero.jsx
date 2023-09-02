@@ -25,14 +25,7 @@ const Hero = () => {
          <ImageGeneration />
 
 
-          <button
-            className="shadow-xl shadow-black text-white
-            bg-[#219665cd] hover:bg-[#30b043] p-2
-            rounded-full cursor-pointer my-4"
-            onClick={()=>{}}
-          >
-            Mint Now
-          </button>
+          
 
           <a
             href="https://daltonic.github.io/"
